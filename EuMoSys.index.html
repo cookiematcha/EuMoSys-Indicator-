@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Quality Monitoring</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f8ff;
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            resize: none;
+            font-size: 1rem;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .recommendation {
+            font-weight: bold;
+            color: red;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Water Quality Monitoring</h1>
+        <textarea id="sensorInput" placeholder="Paste sensor readings in the format: pH, temperature, turbidity, DO"></textarea>
+        <button onclick="checkWaterQuality()">Check Water Quality</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function checkWaterQuality() {
+            const input = document.getElementById("sensorInput").value.trim();
+            const readings = input.split(",").map(val => parseFloat(val.trim()));
+
+            // Ensure the correct number of readings
+            if (readings.length !== 4 || readings.some(isNaN)) {
+                document.getElementById("result").innerHTML = "<p class='recommendation'>Please enter 4 valid numbers in the format: pH, temperature, turbidity, DO.</p>";
+                return;
+            }
+
+            const [ph, temperature, turbidity, dissolvedOxygen] = readings;
+            let result = "";
+
+            // pH Level Check
+            if (ph < 6.5 || ph > 8.5) {
+                result += `<p class="recommendation">pH Level is out of range. Suggested Action: Adjust pH with buffering solutions.</p>`;
+            } else {
+                result += `<p>pH Level is in good condition.</p>`;
+            }
+
+            // Temperature Check
+            if (temperature < 20 || temperature > 30) {
+                result += `<p class="recommendation">Temperature is out of range. Suggested Action: Monitor cooling or warming measures as necessary.</p>`;
+            } else {
+                result += `<p>Temperature is in good condition.</p>`;
+            }
+
+            // Turbidity Check
+            if (turbidity < 0 || turbidity > 5) {
+                result += `<p class="recommendation">Turbidity is too high. Suggested Action: Improve filtration or reduce algae blooms.</p>`;
+            } else {
+                result += `<p>Turbidity is in good condition.</p>`;
+            }
+
+            // Dissolved Oxygen Check
+            if (dissolvedOxygen < 5 || dissolvedOxygen > 10) {
+                result += `<p class="recommendation">Dissolved Oxygen level is out of range. Suggested Action: Increase aeration to improve oxygen levels.</p>`;
+            } else {
+                result += `<p>Dissolved Oxygen level is in good condition.</p>`;
+            }
+
+            // Display result
+            document.getElementById("result").innerHTML = result;
+        }
+    </script>
+</body>
+</html>
